@@ -99,5 +99,19 @@ jobs:
           file: docker/Dockerfile
           push: false
           tags: rdc-api:ci
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Distinct cache scopes: two builds sharing the default scope
+          # overwrite each other's layers on every run.
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+      # docker-compose ships this image too, so an unbuildable Dockerfile.ui
+      # breaks `make docker-up` just as hard as a broken API image.
+      - name: Build UI image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile.ui
+          push: false
+          tags: rdc-ui:ci
+          cache-from: type=gha,scope=ui
+          cache-to: type=gha,mode=max,scope=ui
