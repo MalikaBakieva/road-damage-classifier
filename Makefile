@@ -43,7 +43,7 @@ ui:  ## Run the Streamlit demo
 	streamlit run app/streamlit_app.py
 
 mlflow:  ## Open the MLflow UI on :5000
-	mlflow ui --backend-store-uri file:./mlruns --port 5000
+	MLFLOW_ALLOW_FILE_STORE=true mlflow ui --backend-store-uri file:./mlruns --port 5000
 
 docker-build:  ## Build the Docker images
 	docker compose build

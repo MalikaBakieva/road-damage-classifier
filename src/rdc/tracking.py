@@ -7,6 +7,7 @@ because of a missing tracking server.
 
 from __future__ import annotations
 
+import os
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
@@ -35,6 +36,13 @@ class RunTracker:
         if not enabled:
             return
         try:
+            # MLflow 3.x refuses the filesystem store unless this opt-out is
+            # set, and our configured tracking_uri is `file:./mlruns` — runs
+            # stay inside the repo with no server to stand up, which is what
+            # a prototype wants. `setdefault`, so an operator who exports the
+            # variable (or moves to a database backend) still wins.
+            os.environ.setdefault("MLFLOW_ALLOW_FILE_STORE", "true")
+
             import mlflow
 
             mlflow.set_tracking_uri(tracking_uri)
