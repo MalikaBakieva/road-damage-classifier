@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rdc"
+version = "1.0.0"
+description = "GOV-01 — Road damage image classification for municipal inspection triage"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Oybek Egamqulov" }]
+keywords = ["computer-vision", "road-damage", "transfer-learning", "govtech"]
+
+dependencies = [
+    "torch>=2.1",
+    "torchvision>=0.16",
+    "timm>=0.9.12",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "Pillow>=10.0",
+    "PyYAML>=6.0",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+serve = ["fastapi>=0.110", "uvicorn[standard]>=0.27", "python-multipart>=0.0.9", "pydantic>=2.6"]
+ui = ["streamlit>=1.31", "requests>=2.31"]
+track = ["mlflow>=2.9"]
+dev = ["pytest>=8.0", "pytest-cov>=4.1", "httpx>=0.26", "ruff>=0.3", "black>=24.0"]
+
+[project.scripts]
+rdc-prepare = "rdc.data.prepare:main"
+rdc-train = "rdc.train:main"
+rdc-evaluate = "rdc.evaluate:main"
+rdc-predict = "rdc.predict:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q --strict-markers"
+markers = [
+    "slow: tests that train a model or run the full pipeline",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4"]
+ignore = ["E501", "B008"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.coverage.run]
+source = ["src/rdc"]
+omit = ["*/__init__.py"]

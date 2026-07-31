@@ -1,0 +1,37 @@
+# data & models (never commit dataset copies or large weights)
+data/raw/
+data/interim/
+data/processed/
+!data/.gitkeep
+models/**/*.pt
+models/**/*.pth
+mlruns/
+reports/**/*.png
+reports/runs/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.python-version
+
+# tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# os / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

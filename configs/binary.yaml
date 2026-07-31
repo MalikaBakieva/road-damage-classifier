@@ -1,0 +1,65 @@
+# GOV-01 — binary scope: damaged vs not_damaged
+# Primary configuration. The binary head is the reliable triage signal
+# (brief Question 4): fewer classes, far less confusion, defensible recall.
+
+data:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+  countries: [Japan, India, Norway]
+  image_size: 224
+  val_size: 0.15
+  test_size: 0.15
+  seed: 42
+  negatives_per_image: 1
+  min_box_size: 24
+  crop_context: 0.25
+  num_workers: 2
+
+model:
+  backbone: resnet18        # swap for efficientnet_b0 / convnext_tiny to compare
+  pretrained: true
+  dropout: 0.2
+  freeze_epochs: 1          # linear-probe warm-up before full fine-tuning
+
+train:
+  task: binary
+  epochs: 15
+  batch_size: 32
+  lr: 0.0003
+  head_lr_multiplier: 10.0
+  weight_decay: 0.0001
+  label_smoothing: 0.05
+  imbalance_strategy: weighted_loss   # none | weighted_loss | weighted_sampler
+  early_stopping_patience: 4
+  mixed_precision: false
+  grad_clip: 1.0
+  monitor_metric: macro_f1
+  device: auto
+  seed: 42
+
+augmentation:
+  horizontal_flip: 0.5
+  rotation_degrees: 8.0
+  color_jitter_brightness: 0.3
+  color_jitter_contrast: 0.3
+  color_jitter_saturation: 0.2
+  random_resized_crop_scale: [0.7, 1.0]
+  gaussian_blur_p: 0.15
+  random_erasing_p: 0.10
+
+tracking:
+  enabled: true
+  experiment_name: gov01-road-damage
+  tracking_uri: file:./mlruns
+  run_name: binary-resnet18
+
+inference:
+  model_path: models/binary/model.pt
+  confidence_threshold: 0.60
+  max_upload_mb: 10.0
+  allowed_content_types: [image/jpeg, image/png, image/webp, image/bmp]
+  top_k: 2
+
+output_dir: models
+reports_dir: reports
