@@ -38,7 +38,7 @@ def build_demo_config(task: str, epochs: int, workdir: Path) -> Path:
     cfg.data.countries = ["Japan", "India", "Norway"]
     cfg.data.image_size = 160
     cfg.data.num_workers = 0
-    cfg.model.pretrained = True   # falls back to random init when offline
+    cfg.model.pretrained = True  # falls back to random init when offline
     cfg.model.freeze_epochs = 0
     cfg.train.epochs = epochs
     cfg.train.batch_size = 32

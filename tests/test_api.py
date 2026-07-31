@@ -61,9 +61,18 @@ def test_prediction_payload_is_complete(trained_checkpoint, sample_image_bytes):
     result = predictor.predict(sample_image_bytes)
 
     for key in (
-        "predicted_class", "confidence", "is_damaged", "damage_probability",
-        "needs_human_review", "priority", "top_k", "probabilities",
-        "model", "image", "inference_ms", "disclaimer",
+        "predicted_class",
+        "confidence",
+        "is_damaged",
+        "damage_probability",
+        "needs_human_review",
+        "priority",
+        "top_k",
+        "probabilities",
+        "model",
+        "image",
+        "inference_ms",
+        "disclaimer",
     ):
         assert key in result, f"missing key: {key}"
 
@@ -163,8 +172,10 @@ def test_predict_rejects_corrupt_image(client, corrupt_image_bytes):
         "/predict", files={"file": ("broken.jpg", corrupt_image_bytes, "image/jpeg")}
     )
     assert response.status_code == 400
-    assert "corrupt" in response.json()["detail"].lower() or \
-           "unsupported" in response.json()["detail"].lower()
+    assert (
+        "corrupt" in response.json()["detail"].lower()
+        or "unsupported" in response.json()["detail"].lower()
+    )
 
 
 def test_predict_rejects_unsupported_content_type(client, text_file_bytes):
@@ -183,9 +194,7 @@ def test_predict_rejects_oversized_file(client, monkeypatch):
     monkeypatch.setattr(api_main, "MAX_UPLOAD_MB", 0.001)
     big = io.BytesIO()
     Image.new("RGB", (900, 900), (200, 30, 30)).save(big, format="JPEG", quality=95)
-    response = client.post(
-        "/predict", files={"file": ("big.jpg", big.getvalue(), "image/jpeg")}
-    )
+    response = client.post("/predict", files={"file": ("big.jpg", big.getvalue(), "image/jpeg")})
     assert response.status_code == 413
 
 

@@ -31,8 +31,12 @@ def test_model_output_shape_matches_class_count():
 def test_checkpoint_roundtrip(tmp_path):
     model = build_model("resnet18", num_classes=2, pretrained=False)
     path = save_checkpoint(
-        tmp_path / "m.pt", model=model, classes=list(BINARY_CLASSES),
-        task="binary", backbone="resnet18", image_size=64,
+        tmp_path / "m.pt",
+        model=model,
+        classes=list(BINARY_CLASSES),
+        task="binary",
+        backbone="resnet18",
+        image_size=64,
     )
     loaded, meta = load_checkpoint(path)
     assert meta["classes"] == list(BINARY_CLASSES)

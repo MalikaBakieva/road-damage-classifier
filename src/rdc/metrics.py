@@ -74,14 +74,16 @@ def compute_metrics(
 
 def text_report(y_true: np.ndarray, y_pred: np.ndarray, classes: list[str]) -> str:
     return classification_report(
-        y_true, y_pred, labels=list(range(len(classes))),
-        target_names=classes, zero_division=0, digits=4,
+        y_true,
+        y_pred,
+        labels=list(range(len(classes))),
+        target_names=classes,
+        zero_division=0,
+        digits=4,
     )
 
 
-def expected_calibration_error(
-    y_true: np.ndarray, y_prob: np.ndarray, n_bins: int = 10
-) -> float:
+def expected_calibration_error(y_true: np.ndarray, y_prob: np.ndarray, n_bins: int = 10) -> float:
     """ECE over max-probability. Needed because the API exposes a confidence
     threshold - an over-confident model would route nothing to human review."""
     confidences = y_prob.max(axis=1)

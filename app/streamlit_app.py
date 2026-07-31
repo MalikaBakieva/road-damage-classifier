@@ -63,7 +63,11 @@ def call_api(payload: bytes, filename: str, api_url: str):
 
 st.sidebar.title("Settings")
 threshold = st.sidebar.slider(
-    "Confidence threshold", 0.0, 1.0, 0.60, 0.05,
+    "Confidence threshold",
+    0.0,
+    1.0,
+    0.60,
+    0.05,
     help="Predictions below this confidence are flagged for human review.",
 )
 backend = st.sidebar.radio(
@@ -120,8 +124,15 @@ for file in uploaded:
                 result = predictor.predict(payload)
         except Exception as exc:
             st.error(f"Could not process **{file.name}** — {exc}")
-            rows.append({"file": file.name, "prediction": "ERROR", "confidence": None,
-                         "priority": None, "review": None})
+            rows.append(
+                {
+                    "file": file.name,
+                    "prediction": "ERROR",
+                    "confidence": None,
+                    "priority": None,
+                    "review": None,
+                }
+            )
             continue
 
         icon, action = PRIORITY_STYLE.get(result["priority"], ("⚪", ""))
@@ -161,6 +172,4 @@ if rows:
 
     buffer = io.StringIO()
     frame.to_csv(buffer, index=False)
-    st.download_button(
-        "Download queue as CSV", buffer.getvalue(), "triage_queue.csv", "text/csv"
-    )
+    st.download_button("Download queue as CSV", buffer.getvalue(), "triage_queue.csv", "text/csv")

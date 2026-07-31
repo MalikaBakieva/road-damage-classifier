@@ -165,8 +165,9 @@ def build_annotation_table(raw_dir: str | Path, countries: Iterable[str]) -> pd.
 
     unknown = df.loc[df["damage_code"].notna() & df["damage_class"].isna(), "damage_code"]
     if len(unknown):
-        LOG.info("Dropped %d objects with out-of-scope codes: %s",
-                 len(unknown), sorted(unknown.unique()))
+        LOG.info(
+            "Dropped %d objects with out-of-scope codes: %s", len(unknown), sorted(unknown.unique())
+        )
     return df
 
 

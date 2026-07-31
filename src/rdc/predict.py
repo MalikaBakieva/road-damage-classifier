@@ -87,7 +87,10 @@ class RoadDamagePredictor:
         self.transform = inference_transform(self.image_size)
         LOG.info(
             "Predictor ready: task=%s backbone=%s classes=%s device=%s",
-            self.task, self.backbone, self.classes, self.device,
+            self.task,
+            self.backbone,
+            self.classes,
+            self.device,
         )
 
     # ---------------- core ----------------
@@ -142,7 +145,9 @@ class RoadDamagePredictor:
                 {"class": self.classes[int(i)], "probability": round(float(probs[int(i)]), 4)}
                 for i in order[: self.top_k]
             ],
-            "probabilities": {c: round(float(p), 4) for c, p in zip(self.classes, probs, strict=True)},
+            "probabilities": {
+                c: round(float(p), 4) for c, p in zip(self.classes, probs, strict=True)
+            },
             "model": {
                 "path": self.model_path,
                 "backbone": self.backbone,
@@ -226,8 +231,11 @@ def main() -> None:
     for item in args.images:
         p = Path(item)
         if p.is_dir():
-            paths += [str(f) for f in sorted(p.rglob("*")) if f.suffix.lower() in
-                      {".jpg", ".jpeg", ".png", ".bmp", ".webp"}]
+            paths += [
+                str(f)
+                for f in sorted(p.rglob("*"))
+                if f.suffix.lower() in {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+            ]
         else:
             paths.append(item)
 

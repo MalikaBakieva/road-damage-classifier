@@ -41,7 +41,11 @@ DEVICE = os.getenv("RDC_DEVICE", "auto")
 MAX_BATCH = int(os.getenv("RDC_MAX_BATCH", "16"))
 
 ALLOWED_CONTENT_TYPES = {
-    "image/jpeg", "image/jpg", "image/png", "image/webp", "image/bmp",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "image/bmp",
     "application/octet-stream",  # some clients send this for valid images
 }
 
@@ -229,7 +233,8 @@ async def invalid_image_handler(request: Request, exc: InvalidImageError):
     return JSONResponse(
         status_code=400,
         content=ErrorResponse(
-            error="invalid_image", detail=str(exc),
+            error="invalid_image",
+            detail=str(exc),
             hint="Send a JPEG, PNG, WebP or BMP road photograph.",
         ).model_dump(),
     )

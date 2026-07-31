@@ -2,12 +2,22 @@
 data/raw/
 data/interim/
 data/processed/
+data/demo/
 !data/.gitkeep
 models/**/*.pt
 models/**/*.pth
+models/**/config_used.yaml
 mlruns/
+
+# run outputs. Never commit these: a `make demo` run writes metrics from
+# SYNTHETIC images here, and a committed metrics.json reads as a real result.
+# Quote numbers only from a documented RDD2022 run (see docs/MODEL_CARD.md).
 reports/**/*.png
+reports/**/*.json
+reports/**/*.csv
+reports/**/*.txt
 reports/runs/
+!reports/.gitkeep
 
 # python
 __pycache__/

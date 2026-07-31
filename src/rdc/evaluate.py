@@ -61,8 +61,15 @@ def plot_confusion_matrix(cm: list[list[int]], classes: list[str], path: Path) -
     ax.set_title("Confusion matrix (row-normalised)")
     for i in range(len(classes)):
         for j in range(len(classes)):
-            ax.text(j, i, f"{int(cm_arr[i, j])}\n{norm[i, j]:.2f}", ha="center", va="center",
-                    color="white" if norm[i, j] > 0.5 else "black", fontsize=8)
+            ax.text(
+                j,
+                i,
+                f"{int(cm_arr[i, j])}\n{norm[i, j]:.2f}",
+                ha="center",
+                va="center",
+                color="white" if norm[i, j] > 0.5 else "black",
+                fontsize=8,
+            )
     fig.colorbar(im, ax=ax, shrink=0.8)
     fig.tight_layout()
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -119,8 +126,9 @@ def evaluate(config_path: str, model_path: str | None = None, split: str = "test
     model_path = model_path or str(Path(cfg.output_dir) / cfg.train.task / "model.pt")
     model, meta = load_checkpoint(model_path, device)
     if meta.get("classes") != classes:
-        LOG.warning("Checkpoint classes %s differ from config classes %s",
-                    meta.get("classes"), classes)
+        LOG.warning(
+            "Checkpoint classes %s differ from config classes %s", meta.get("classes"), classes
+        )
         classes = meta["classes"]
 
     loaders, _ = build_dataloaders(cfg)
@@ -159,8 +167,12 @@ def evaluate(config_path: str, model_path: str | None = None, split: str = "test
     save_json(metrics, reports / "metrics.json")
 
     LOG.info("\n%s", report_text)
-    LOG.info("macro_f1=%.4f  accuracy=%.4f  ECE=%.4f",
-             metrics["macro_f1"], metrics["accuracy"], metrics["expected_calibration_error"])
+    LOG.info(
+        "macro_f1=%.4f  accuracy=%.4f  ECE=%.4f",
+        metrics["macro_f1"],
+        metrics["accuracy"],
+        metrics["expected_calibration_error"],
+    )
     LOG.info("Reports written to %s", reports)
     return metrics
 

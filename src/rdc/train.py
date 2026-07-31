@@ -114,7 +114,9 @@ def train(config_path: str, override_task: str | None = None) -> dict:
     weight = None
     if cfg.train.imbalance_strategy == "weighted_loss":
         weight = compute_class_weights(datasets["train"]).to(device)
-        LOG.info("Class weights: %s", dict(zip(classes, weight.cpu().numpy().round(3), strict=True)))
+        LOG.info(
+            "Class weights: %s", dict(zip(classes, weight.cpu().numpy().round(3), strict=True))
+        )
     criterion = nn.CrossEntropyLoss(weight=weight, label_smoothing=cfg.train.label_smoothing)
 
     optimizer = torch.optim.AdamW(
@@ -158,8 +160,13 @@ def train(config_path: str, override_task: str | None = None) -> dict:
 
             LOG.info(
                 "epoch %02d | train_loss %.4f f1 %.4f | val_loss %.4f f1 %.4f acc %.4f | %.1fs",
-                epoch, train_loss, train_metrics["macro_f1"],
-                val_loss, val_metrics["macro_f1"], val_metrics["accuracy"], time.time() - t0,
+                epoch,
+                train_loss,
+                train_metrics["macro_f1"],
+                val_loss,
+                val_metrics["macro_f1"],
+                val_metrics["accuracy"],
+                time.time() - t0,
             )
 
             history.append(
@@ -206,8 +213,9 @@ def train(config_path: str, override_task: str | None = None) -> dict:
         cfg.to_yaml(out_dir / "config_used.yaml")
         save_json({"history": history, "val_metrics": final_val}, reports_dir / "training.json")
 
-        tracker.log_metrics({f"final_val_{k}": v for k, v in final_val.items()
-                             if isinstance(v, (int, float))})
+        tracker.log_metrics(
+            {f"final_val_{k}": v for k, v in final_val.items() if isinstance(v, (int, float))}
+        )
         tracker.log_artifact(ckpt)
         tracker.log_artifact(reports_dir / "training.json")
 
@@ -220,8 +228,12 @@ def main() -> None:
     parser.add_argument("--task", choices=["binary", "multiclass"], default=None)
     args = parser.parse_args()
     result = train(args.config, args.task)
-    print(json.dumps({"checkpoint": result["checkpoint"],
-                      "val_macro_f1": result["val_metrics"]["macro_f1"]}, indent=2))
+    print(
+        json.dumps(
+            {"checkpoint": result["checkpoint"], "val_macro_f1": result["val_metrics"]["macro_f1"]},
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

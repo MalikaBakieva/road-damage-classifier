@@ -60,13 +60,13 @@ test:  ## Run the test suite
 test-fast:  ## Run tests, skipping the slow training ones
 	pytest -v -m "not slow"
 
-lint:  ## Lint
-	ruff check src tests scripts
-	black --check src tests scripts
+lint:  ## Lint and format check
+	ruff check src tests scripts app
+	ruff format --check src tests scripts app
 
 format:  ## Auto-format
-	ruff check --fix src tests scripts
-	black src tests scripts
+	ruff check --fix src tests scripts app
+	ruff format src tests scripts app
 
 clean:  ## Remove caches and generated artefacts
 	rm -rf .pytest_cache .ruff_cache htmlcov .coverage coverage.xml

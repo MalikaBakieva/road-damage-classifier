@@ -66,7 +66,9 @@ def classifier_parameter_names(model: nn.Module) -> list[str]:
         head_ids = {id(p) for p in head.parameters()}
         return [n for n, p in model.named_parameters() if id(p) in head_ids]
     except Exception:
-        return [n for n, _ in model.named_parameters() if n.startswith(("fc.", "head.", "classifier."))]
+        return [
+            n for n, _ in model.named_parameters() if n.startswith(("fc.", "head.", "classifier."))
+        ]
 
 
 def set_backbone_trainable(model: nn.Module, trainable: bool) -> None:
@@ -119,9 +121,7 @@ def save_checkpoint(
     return path
 
 
-def load_checkpoint(
-    path: str | Path, device: str = "cpu"
-) -> tuple[nn.Module, dict[str, Any]]:
+def load_checkpoint(path: str | Path, device: str = "cpu") -> tuple[nn.Module, dict[str, Any]]:
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(

@@ -17,8 +17,14 @@ LOG = get_logger(__name__)
 
 
 class RunTracker:
-    def __init__(self, enabled: bool, experiment_name: str, tracking_uri: str,
-                 run_name: str | None = None, fallback_dir: str = "reports/runs") -> None:
+    def __init__(
+        self,
+        enabled: bool,
+        experiment_name: str,
+        tracking_uri: str,
+        run_name: str | None = None,
+        fallback_dir: str = "reports/runs",
+    ) -> None:
         self.enabled = enabled
         self.run_name = run_name
         self.fallback_dir = Path(fallback_dir)

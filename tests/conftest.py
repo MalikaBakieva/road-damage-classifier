@@ -116,7 +116,12 @@ def trained_checkpoint(tmp_path):
     model = build_model("resnet18", num_classes=len(BINARY_CLASSES), pretrained=False)
     path = tmp_path / "model.pt"
     save_checkpoint(
-        path, model=model, classes=list(BINARY_CLASSES), task="binary",
-        backbone="resnet18", image_size=64, metrics={"val": {"macro_f1": 0.0}},
+        path,
+        model=model,
+        classes=list(BINARY_CLASSES),
+        task="binary",
+        backbone="resnet18",
+        image_size=64,
+        metrics={"val": {"macro_f1": 0.0}},
     )
     return path
